@@ -1,0 +1,445 @@
+-> open new project
+    (optional for other IDE)
+    -> create new project folder
+    -> open the project folder in the IDE, e.g.VSCode
+    -> pip install virtualenv
+    -> virtualenv venv
+    -> source venv/scripts/activate
+-> pip install django
+-> pip freeze > requirements.txt
+-> django-admin startproject djcrm .
+-> create .gitignore file in the project folder
+    -> copy everything from 'https://github.com/github/gitignore/blob/master/Python.gitignore' into the file
+-> python manage.py migrate
+-> python manage.py startapp leads
+-> add 'leads' app in setting.py
+-> create classes (models) in models.py
+    -> import AbstractUser class
+-> in settings.py, add: AUTH_USER_MODEL = 'leads.User'
+-> delete db.sqlite3 and 0001 migrations file
+-> python manage.py makemigrations
+-> python manage.py migrate
+    (optional)
+    -> python manage.py shell
+        (in the shell terminal)
+            -> from leads.models import Leads
+            -> Lead.objects.all()
+            -> exit()
+-> python manage.py createsuperuser
+        (in the shell terminal)
+            -> from django.contrib.auth import get_user_model
+            -> User = get_user_model()
+            -> User.objects.all()
+            -> admin_user = User.objects.get(username="admin")
+            -> from leads.models import Agent
+            -> agent = Agent.objects.create(user=admin_user)
+            -> from leads.models import Lead
+            -> maruf_agent = Agent.objects.get(user__email="admin@mail.com")
+            -> Lead.objects.create(first_name="Joe", last_name="Soap", age=35, agent=maruf_agent)
+            -> add string method to the Lead model for a custom retrieval of data
+-> import models into admin.py...write code
+-> create home_page function in views.py
+-> add path for home page (import home_page from leads/views.py)
+-> create templates folder
+-> create home_page.html
+    -> update home_page function in views.py
+-> configure in settings.py to find templates -> 'DIRS': [BASE_DIR / 'templates'],
+-> import Lead model in views.py and update the home_page function
+-> update home_page.html to show leads
+-> create urls.py in leads app
+    -> import home_page function from views.py
+    -> modify urlpatterns in leads urls.py
+    -> modify url patterns in project urls.py
+-> change home_page function to lead_list in views.py
+-> create templates folder inside leads app and create leads folder inside
+    -> create lead_list.html file
+-> modify lead_list.html file
+-> create lead_detail view in views.py
+-> import lead_detail view in lead urls.py and add path
+-> create lead_create view in views.py
+-> import lead_create view in lead urls.py and add path
+-> create lead_create.html in leads/templates/leads
+-> create forms.py in leads app
+    -> code forms.py...import forms, etc.
+    -> create LeadForm class
+-> import LeadForm class to views.py
+    -> update lead_create view to make POST request
+-> output the form in lead_create.html, html form to make post request
+-> create LeadModelForm in forms.py and import to views.py
+    -> replace LeadForm in lead_create view with LeadModelForm
+    -> update lead_create view
+-> modify lead_list.html to show create lead nav
+-> modify lead_detail.html to show agent of a lead
+-> create lead_update view in views.py
+-> import lead_update view in lead urls.py and add path
+-> create lead_update.html in leads/templates/leads and modify it
+-> modify lead_update view in views.py
+-> create lead_delete view in views.py
+-> import lead_delete view in lead urls.py and add path
+-> in lead_detail.html add anchor tags for update and delete
+-> add <name> argument for each in leads app urls.py
+    ...NOTE: to avoid hard coding links in anchor tags in html templates
+    -> modify the anchor tags in all html files with url names
+        ...NOTE: the namespace from urls.py in project folder will come into play here
+-> create base.html in base template folder and modify it
+-> inherit base.html template into all other html templates
+    (optional)
+    to include another html template into the base template
+    -> create script.html in base template folder
+    -> create a javascript code...simple console.log
+    -> include script.html in base.html using {% include "script.html" %} after the {% endblock content %}
+-> style the templates using css frameworks (tailwind css, bootstrap, etc.)
+    -> use tailblocks...go to their site
+    -> create navbar.html in base template folder and populate it with header code
+    -> include navbar.html in base.html
+    -> create landing.html in base template folder
+        -> inherit base.html and use blocks
+        -> populate with hero code inside block content
+-> create landing_page view in views.py in leads app
+-> import landing_page view and add path in root urls.py in the djcrm project folder
+-> add Leads link to navbar.html
+-> style the other html templates in the leads app using code from tailblocks
+(optional) class based views - NOTE: to remove repetitive code
+    -> create a class (LandingPageView) for landing page in views.py
+    -> import TemplateView and inherit it and write code inside the class
+    NOTE: other views -> ListView, CreateView, UpdateView, DetailView, DeleteView
+    -> import the class to root urls.py
+    -> add path for LandingPageView
+    -> create a class LeadListView for list of leads in views.py (same as lead_list function view)
+    -> import ListView and inherit it and write code inside the class
+    -> import the class to root urls.py
+    -> add path for LeadListView
+    -> in lead_list.html replace "leads" context with "object_list" which is the default context name...
+            and can be modified
+        -> modify the context name to "leads" inside the LeadListView class
+    -> do the same for detail, create, update and delete
+    -> for LeadCreateView class
+        -> import reverse from django.shortcuts additionally for redirecting after POST
+    -> for LeadDeleteView a template needs to be provided
+        -> create lead_delete.html
+    -> (optional) instead importing different types of views from generic, just import generic in views.py
+-> setup static files
+    -> create 'static' folder in root
+    -> configure settings.py...STATICFILES_DIRS, STATIC_ROOT
+-> import settings to root urls.py
+-> import static function to root urls.py
+-> add path as an addition to urlpatterns
+-> add {% load static %} at the top of base.html and link style.css using static
+-> email - built-in django email
+    -> in views.py, in LeadCreateView class create method form_valid
+    -> import send_mail in views.py
+    -> write code for email
+    -> configure email backend in settings.py
+-> authentication - built-in django authentication
+    -> in root templates folder create registration folder
+    -> in registration folder, create login.html
+    -> in login.html make an extend from base.html and write code
+    -> in root urls.py import LoginView and add path
+    -> add login redirection url in settings.py
+    -> modify navbar.html for authenticated user with if statements
+    -> import LogoutView in root urls.py and add path
+-> Signup
+    -> create signup.html in registration folder and extend from base.html and write code
+    -> in leads app views.py create class view SignupView
+    -> import UserCreationForm
+    -> import SignupView in root urls.py and add path
+    -> import UserCreationForm and UsernameField in forms.py to modify the class
+    -> import get_user_model in forms.py and specify User
+    -> create CustomUserCreationForm to customize UserCreationForm in forms.py
+    -> import CustomUserCreationForm in views.py and remove the default UserCreationForm
+-> Writing Tests
+    -> in tests.py create class LandingPageTest and inherit TestCase
+    -> import reverse in tests.py
+    -> write methods... naming convention : "test_something_..."
+    -> terminal: python manage.py test
+    (optional)
+    -> create a folder called tests in leads app
+    -> create __init.py__ file
+    -> rename tests.py to test_views.py (for testing views) and move it to this folder
+    -> create test_forms.py (for testing forms)
+-> Authorization
+    NOTE: restrict CRUD operations...allow for logged in users
+    -> in views.py import LoginRequiredMixin
+    -> inherit LoginRequiredMixin as the first parameter in all CRUD views
+    -> specify login url in settings.py
+-> User Profile
+    -> create UserProfile class in models.py and write code
+    -> modify Agent model
+    -> python manage.py makemigrations...select: 1,2...
+    -> delete db.sqlite3 (to overcome error due to non-existent userprofile)
+    -> python manage.py migrate
+    -> create superuser again: python manage.py createsuperuser
+    -> import UserProfile in admin.py and register
+    -> create user profile manually from admin panel
+    NOTE: user profile needs to created automatically
+    -> "django Signals" to create user profile automatically
+        -> import post_save signal in models.py in leads app
+        -> create function post_user_created_signal
+-> Create Agents
+    -> create agents app: python manage.py startapp agents
+    -> register agents app in settings.py
+    -> create urls.py in agents app and write necessary code
+    -> add path for 'agents' in root urls.py
+    -> create AgentListView class in agents views.py
+    -> for queryset instead of hardcoding, this time use get_queryset function
+    -> import AgentListView in agents urls.py and add path
+    -> create template folder in agents app -> create agents folder -> create agent_list.html
+    -> agent_list.html will extend from base.html
+    -> write code inside agent_list.html
+    -> create AgentCreateView class in agents views.py
+    -> create forms.py in agents app
+    -> import necessary modules and create AgentModelForm
+    -> import AgentModelForm in agents views.py and specify in form_class of AgentCreateView
+    -> create agent_create.html template and write code inside
+    -> import AgentCreateView in agents urls.py and add path
+    (organization error fix)
+    -> modify AgentCreateView to override form_valid method for organization_id associated with agent as
+            foreign key
+    -> create AgentDetailView, AgentUpdateView and AgentDeleteView (same as for leads)
+    -> modify navbar.html in root template to add agents nav link
+    (filter Agents based on organization/ user)
+    NOTE: only show agents that are under a specific user/ organization
+    -> change the queryset of AgentListView, AgentDetailView and AgentDeleteView
+-> separate users - organizer and agents
+NOTE: agents should only be able to see their leads and not other agents or their leads
+-> in leads models.py modify User model
+    fields: is_organizer, is_agent
+-> python manage.py makemigrations
+-> python manage.py migrate
+-> modify navbar.html for access visibility between organizer and agent
+-> check if an agent is an organizer
+    -> add mixins.py in agents app
+    -> import AccessMixin
+    -> create class OrganizerAndLoginRequiredMixin (take code from LoginRequiredMixin)
+    -> import OrganizerAndLoginRequiredMixin to agents views.py and replace
+           LoginRequiredMixin with OrganizerAndLoginRequiredMixin
+-> Organizer will assign agents to leads
+    Agents will not be able to Create, Update or Delete leads
+    -> import and use custom mixin "OrganizerAndLoginRequiredMixin" to create, update and delete views in leads views.py
+    -> update visibility access in lead_list.html for organizer only
+    -> in leads models.py add null=True and blank=True and on_delete=models.SET_NULL in "agent" attribute
+    -> python manage.py makemigrations
+    -> python manage.py migrate
+    -> in LeadListView in  leads views.py use get_queryset function and remove previously created queryset object
+    -> add organization field in Lead class in models.py in leads app (v. important)
+        NOTE: this will allow to keep track of all leads under organization even when no agent is assigned
+    -> python manage.py makemigrations
+        this will prompt for a default organizer id (*will need to work on during deployment)
+    -> python manage.py migrate
+    -> update the queryset by adding filter in LeadListView, LeadDetailView, LeadUpdateView and LeadDeleteView
+            in leads views.py
+-> in agents forms.py remove Agent model and import get_user_model...modify the class
+-> modify AgentCreateView in agents views.py
+    -> import send_mail
+    -> import random...use set_password to set a random password for the agent user
+    -> create agent to test
+-> Password Reset
+    -> in login.html add 'Forgot password?' link
+    -> import PasswordResetView, PasswordResetDoneView and PasswordResetConfirmView in root urls.py and add path
+    -> create password_reset_form, password_reset_email,
+            password_reset_done.html, password_reset_confirm.html templates in registration folder
+    -> add url to 'Forgot password?' link in login.html
+    -> write code in password_reset_form
+    -> write code in password_reset_done
+    -> write code in password_reset_email
+    -> add path for PasswordResetConfirmView in root urls.py
+    -> write code in password_reset_confirm.html
+    -> import PasswordResetCompleteView in root urls.py and add path
+    -> add password_reset_complete.html in registration folder
+    -> write code in password_reset_complete.html
+-> in organizer account, filter lead list by unassigned leads
+    -> in leads views.py add get_context_data method in LeadListView
+    -> edit get_queryset method in LeadListView to filter assigned leads only
+    -> edit lead_list.html file to show both assigned and unassigned leads
+-> assign a lead to an agent
+    -> create AssignAgentView in leads views.py
+    -> create assign_agent.html in leads template folder
+    -> in leads forms.py create AssignAgentForm and import Agent model
+    -> import AssignAgentForm to leads views.py and add form_class to AssignAgentView
+    -> import AssignAgentView to leads urls.py and add path
+    -> add get_form_kwargs method in AssignAgentView in leads views.py
+    -> add form_valid method in AssignAgentView in leads views.py
+-> categorize leads based on their status
+    -> in leads models.py create Category model
+    -> add category reference to Lead model
+    -> register Category in admin.py
+    -> python manage.py makemigrations
+    -> python manage.py migrate
+    -> create the category names in admin panel
+    -> create CategoryListView in leads views.py...import Category model
+    -> create category_list.html in leads template folder
+    -> import CategoryListView in leads urls.py and add path
+    -> modify category_list.html to show count of leads that have no category (unassigned)
+-> category detail view- all leads under a specific category
+    -> create CategoryDetailView in leads views.py
+    -> create category_detail.html in leads template folder
+    -> modify Lead model category foreign key with 'related_name'
+    -> modify CategoryDetailView get_context_data method
+    -> python manage.py makemigrations
+    -> python manage.py migrate
+    -> import CategoryDetailView in leads urls.py and add path
+    -> in category_list.html make category name into <a> tags
+    -> modify lead first_name in category_detail.html with <a> tags to link to lead detail
+-> update category status of a lead
+    -> in lead_detail.html change 'Reviews' to 'Category'
+    -> create LeadCategoryUpdateView in leads views.py
+    -> create LeadCategoryUpdateForm in leads forms.py
+    -> import LeadCategoryUpdateForm in leads views.py and update form_class in LeadCategoryUpdateView
+    -> import and add path for LeadCategoryUpdateView in leads urls.py
+    -> create lead_category_update.html in leads template folder
+    -> add url for lead-category-update in lead_detail.html
+-> django packages- install 'django crispy forms' 3rd party django package
+    -> djangopackages.org
+    -> https://github.com/django-crispy-forms/django-crispy-forms
+    -> https://django-crispy-forms.readthedocs.io/en/latest/index.html
+    -> pip install django-crispy-forms
+    -> pip freeze > requirements.txt
+    -> add crispy_forms to settings.py in INSTALLED_APPS
+    -> https://github.com/django-crispy-forms/crispy-tailwind
+    -> pip install crispy-tailwind
+    -> pip freeze > requirements.txt
+    -> in settings.py add CRISPY_TEMPLATE_PACK = 'tailwind'
+    -> add crispy_tailwind to settings.py in INSTALLED_APPS
+    -> in settings.py add CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
+    -> follow instructions in 'How to use' -> https://github.com/django-crispy-forms/crispy-tailwind
+        -> modify login.html
+        -> modify other forms
+-> add more fields to Lead model
+    -> modify Lead model in leads models.py
+    -> run migrations commands (provide default values for now)
+    -> add the new fields (except date_added) in LeadModelForm in lead forms.py
+    -> modify LeadCreateView form_valid method in leads views.py
+    -> modify the html templates to show these additional info
+-> set logout redirect url in settings.py
+-> Deployment configuration
+    -> django environ package- https://github.com/joke2k/django-environ
+    -> pip install django-environ
+    -> pip freeze > requirements.txt
+    -> create .env file in djcrm folder
+    -> in setting.py import environ and add some code...check settings.py for ref.
+    -> create .template.env file in djcrm folder
+    NOTE: to avoid adding .env file to github
+    -> add READ_DOT_ENV_FILE variable in settings.py
+    NOTE: this will be read from the session and not from the .env file when in production
+    -> to run the project now
+        -> terminal: set READ_DOT_ENV_FILE=True...then python manage.py runserver
+    -> setup postgresql database
+        -> create djcrm database from pgadmin
+        -> change database engine to postgresql_psycopg2
+        -> put the database name 'djcrm' in .env
+        -> add db user, password, host and port to settings.py
+        NOTE: the actual values should go to .env, same as the database name
+        -> provide values for the variables in .env file
+        -> copy all of the variables and add them to .template.env and remove the values
+        -> pip install psycopg2-binary
+        -> python manage.py migrate
+        NOTE:
+            DATABASES = {
+                'default': {
+                    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+                    'NAME': env('DB_NAME'),
+                    'USER': env('DB_USER'),
+                    'PASSWORD': env('DB_PASSWORD'),
+                    'HOST': env('DB_HOST'),
+                    'PORT': env('DB_PORT'),
+                }
+            }
+    -> configure static file configuration
+        -> http://whitenoise.evans.io/en/stable/
+        -> pip install whitenoise
+        -> pip freeze > requirements.txt
+        -> add 'whitenoise.middleware.WhiteNoiseMiddleware', in middleware in settings.py
+        -> add STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage' in settings.py
+        -> run python manage.py collectstatic
+        -> add 'whitenoise.runserver_nostatic' to INSTALLED_APPS
+        NOTE: this will keep static file handling same as whitenoise production
+    -> add some production security configuration in settings.py
+        if not DEBUG:
+            SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+            SECURE_SSL_REDIRECT = True
+            SESSION_COOKIE_SECURE = True
+            CSRF_COOKIE_SECURE = True
+            SECURE_BROWSER_XSS_FILTER = True
+            SECURE_CONTENT_TYPE_NOSNIFF = True
+            SECURE_HSTS_SECONDS = 31536000  # 1 year
+            SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+            SECURE_HSTS_PRELOAD = True
+            X_FRAME_OPTIONS = "DENY"
+
+            ALLOWED_HOSTS = ["*"]
+    -> pip install gunicorn
+    -> deploy project to heroku
+        -> setup git version control
+            -> https://codemy.com/git
+            -> git config --global user.name "Your Name"
+            -> git config --global user.email "you@youraddress.com"
+            -> git config --global push.default matching
+            -> git config --global alias.co checkout
+            -> git init
+            -> git add .
+            -> git commit -am 'initial commit'
+        -> install heroku toolbelt: https://devcenter.heroku.com/articles/heroku-cli
+        -> reopen gitbash
+        -> check heroku version (optional/ check with gitbash): heroku --version
+        -> create ssh key to connect to heroku from gitbash
+        -> gitbash commands:
+            -> mkdir ~/.ssh (file may already exist if created before)
+            -> cd ~/.ssh
+            -> ls (to check directory)
+            -> ssh-keygen.exe
+            -> hit 'Enter'
+            -> 'cd' into project folder .../djcrm/djcrm
+            -> heroku login
+        -> login to heroku
+            -> heroku keys:add
+        -> pip install django-heroku
+        NOTE: psycopg2 and whitenoise already installed earlier
+        -> pip install python-decouple
+        -> create a file called Procfile in the root folder
+            -> add 'web: gunicorn djcrm.wsgi' in the file
+        -> pip freeze > requirements.txt
+        -> in settings.py import: django_heroku, dj_database_url and from decouple import config
+            -> add whitenoise to middleware (already done)
+            -> add staticfiles storage (already done)
+            -> add django_heroku.settings(locals())
+        -> gitbash commands:
+            -> heroku create (to create the app on heroku)
+            -> heroku rename <name of the app> (to rename the app)
+            -> heroku addons:create heroku-postgresql:hobby-dev (create postgresql database on heroku)
+            -> git push heroku master
+                -> if there is an error:
+                    ! [remote rejected] master -> master (pre-receive hook declined)
+                        error: failed to push some refs to 'https://git.heroku.com/djcrmbymaruf.git'
+                    -> git checkout -b djcrmbymaruf
+                    -> git push heroku djcrmbymaruf
+            -> heroku run python manage.py migrate
+            ->
+            ->
+            ->
+
+    -> deploy project to digital ocean (paid)
+        -> https://cloud.digitalocean.com/login
+        -> go to apps, click launch your app
+        -> select github repository...
+        -> complete the process (instructions in video)
+-> command checklist for deployment
+    -> create bash file called runserver.sh in root folder
+NOTE: commands will vary based on hosting platforms
+    -> run the file in command line
+        -> on mac: chmod +x runserver.sh
+            -> ./ runserver.sh
+-> configure email using mailgun
+    -> add domain (domain required)
+    -> provide configurations in settings.py
+    -> provide the actual values in .env
+    -> add the variables in .template.env without the values
+-> update the queryset when there's no lead or agent
+    -> add {% empty %} before {% endfor %} in lead_list.html
+    -> do the same for agent_list.html
+-> create CategoryCreateView, CategoryUpdateView and CategoryDeleteView for category in leads views.py
+    -> create the html templates category_create and category_update
+    -> create CategoryModelForm class in forms.py
+        -> import Category model
+        -> import CategoryModelForm in views.py and add to form_class in CategoryCreateView and CategoryUpdateView
+        -> import CategoryCreateView, CategoryUpdateView and CategoryDeleteView in leads urls.py and add path
+        -> add navlink in category_list.html and category_detail.html
